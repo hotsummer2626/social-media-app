@@ -1,6 +1,7 @@
 import Head from "next/head";
 import { Inter } from "@next/font/google";
 import SideBar from "@/components/SideBar";
+import Feed from "@/components/Feed";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -21,6 +22,7 @@ export default function Home() {
             </Head>
             <main className="bg-black min-h-screen flex max-w-[1500px] mx-auto">
                 <SideBar />
+                <Feed />
             </main>
         </>
     );
