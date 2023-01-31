@@ -1,10 +1,31 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faXmark } from "@fortawesome/free-solid-svg-icons";
+import {
+    faXmark,
+    faImage,
+    faChartSimple,
+    faFaceSmile,
+    faCalendar,
+} from "@fortawesome/free-solid-svg-icons";
+import data from "@emoji-mart/data";
+import Picker from "@emoji-mart/react";
 
 const Input = () => {
     const [input, setInput] = useState("");
     const [selectedFile, setSelectFile] = useState(null);
+    const [showEmojis, setShowEmojis] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+    const filePickerRef = useRef(null);
+
+    const addImageToPost = () => {};
+
+    const addEmoji = (e) => {
+        let sym = e.unified.split("-");
+        let codesArray = [];
+        sym.forEach((el) => codesArray.push("0x" + el));
+        let emoji = String.fromCodePoint(...codesArray);
+        setInput(input + emoji);
+    };
     return (
         <div
             className={`border-b border-gray-700 p-3 flex space-x-3 overflow-y-scroll`}
@@ -15,7 +36,11 @@ const Input = () => {
                 className="h-11 w-11 rounded-full cursor-pointer"
             />
             <div className="w-full divide-y divide-gray-700">
-                <div className={``}>
+                <div
+                    className={`${selectedFile && "py-7"} ${
+                        input && "space-y-2.5"
+                    }`}
+                >
                     <textarea
                         value={input}
                         onChange={(e) => setInput(e.target.value)}
@@ -41,6 +66,65 @@ const Input = () => {
                             />
                         </div>
                     )}
+                </div>
+                <div className="flex items-center justify-between pt-2.5">
+                    <div className="flex items-center">
+                        <div
+                            className="icon"
+                            onClick={() => filePickerRef.current.click()}
+                        >
+                            <FontAwesomeIcon
+                                icon={faImage}
+                                className="h-[22px] text-[#1d9bf0]"
+                            />
+                            <input
+                                type="file"
+                                hidden
+                                onChange={addImageToPost}
+                                ref={filePickerRef}
+                            />
+                        </div>
+                        <div className="icon rotate-90">
+                            <FontAwesomeIcon
+                                icon={faChartSimple}
+                                className="h-[22px] text-[#1d9bf0]"
+                            />
+                        </div>
+                        <div
+                            className="icon"
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                setShowEmojis(!showEmojis);
+                            }}
+                        >
+                            <FontAwesomeIcon
+                                icon={faFaceSmile}
+                                className="h-[22px] text-[#1d9bf0]"
+                            />
+                        </div>
+                        <div className="icon">
+                            <FontAwesomeIcon
+                                icon={faCalendar}
+                                className="h-[22px] text-[#1d9bf0]"
+                            />
+                        </div>
+                        {showEmojis && (
+                            <div className="absolute mt-[465px] max-w-[320px] -ml-[40px] rounded-bl-3xl">
+                                <Picker
+                                    data={data}
+                                    theme="dark"
+                                    onEmojiSelect={addEmoji}
+                                    onClickOutside={() => setShowEmojis(false)}
+                                />
+                            </div>
+                        )}
+                    </div>
+                    <button
+                        className="bg-[#1d9bf0] text-white rounded-full px-4 py-1.5 font-bold shadow-md hover:bg-[#1a8cd8] disabled:hover:bg-[#1d9bf0] disabled:opacity-50 disabled:cursor-default"
+                        disabled={!input.trim() && !selectedFile}
+                    >
+                        Tweet
+                    </button>
                 </div>
             </div>
         </div>
