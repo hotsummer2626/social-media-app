@@ -2,10 +2,21 @@ import Head from "next/head";
 import { Inter } from "@next/font/google";
 import SideBar from "@/components/SideBar";
 import Feed from "@/components/Feed";
+import Login from "@/components/Login";
+import Modal from "@/components/Modal";
+import { getProviders, getSession, useSession } from "next-auth/react";
+import { useSelector } from "react-redux";
 
 const inter = Inter({ subsets: ["latin"] });
 
-export default function Home() {
+export default function Home({ providers }) {
+    const { data: session } = useSession();
+    const {
+        modal: { isModalOpen },
+    } = useSelector((state) => state);
+
+    if (!session) return <Login providers={providers} />;
+
     return (
         <>
             <Head>
@@ -23,7 +34,16 @@ export default function Home() {
             <main className="bg-black min-h-screen flex max-w-[1500px] mx-auto">
                 <SideBar />
                 <Feed />
+                {isModalOpen && <Modal />}
             </main>
         </>
     );
+}
+
+export async function getServerSideProps(context) {
+    const providers = await getProviders();
+    const session = await getSession(context);
+    return {
+        props: { providers, session },
+    };
 }
