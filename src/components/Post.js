@@ -21,6 +21,7 @@ import {
     orderBy,
     query,
     setDoc,
+    updateDoc,
 } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
@@ -29,7 +30,6 @@ import { setPostId } from "@/store/slices/post";
 
 const Post = ({ id, post, postPage }) => {
     const { data: session } = useSession();
-    console.log(session)
     const [comments, setComments] = useState([]);
     const [likes, setLikes] = useState([]);
     const [liked, setLiked] = useState(false);
@@ -64,15 +64,21 @@ const Post = ({ id, post, postPage }) => {
     const likePost = async () => {
         if (liked) {
             await deleteDoc(doc(db, "posts", id, "likes", session.user.uid));
+            await updateDoc(doc(db, "posts", id), {
+                numberOfLikes: likes.length - 1,
+            });
         } else {
             await setDoc(doc(db, "posts", id, "likes", session.user.uid), {
                 username: session.user.name,
+            });
+            await updateDoc(doc(db, "posts", id), {
+                numberOfLikes: likes.length + 1,
             });
         }
     };
     return (
         <div
-            className="p-3 flex cursor-pointer border-b border-gray-700"
+            className="p-3 flex cursor-pointer border-b-8 border-white"
             onClick={() => router.push(`/${id}`)}
         >
             {!postPage && (
@@ -91,10 +97,10 @@ const Post = ({ id, post, postPage }) => {
                             className="h-11 w-11 rounded-full mr-4"
                         />
                     )}
-                    <div className="text-[#6e767d]">
+                    <div className="text-gray-500">
                         <div className="inline-block group">
                             <h4
-                                className={`font-bold text-[15px] sm:text-base text-[#d9d9d9] group-hover:underline ${
+                                className={`font-bold text-[15px] sm:text-base text-gray-500 group-hover:underline ${
                                     !postPage && "inline-block"
                                 }`}
                             >
@@ -113,7 +119,7 @@ const Post = ({ id, post, postPage }) => {
                             <Moment fromNow>{post?.timestamp?.toDate()}</Moment>
                         </span>
                         {!postPage && (
-                            <p className="text-[#d9d9d9] text-[15px] sm:text-base mt-0.5">
+                            <p className="text-gray-500 text-[15px] sm:text-base mt-0.5">
                                 {post?.text}
                             </p>
                         )}
@@ -121,12 +127,12 @@ const Post = ({ id, post, postPage }) => {
                     <div className="icon group flex-shrink-0 ml-auto">
                         <FontAwesomeIcon
                             icon={faEllipsis}
-                            className="h-5 text-[#6e767d] group-hover:text-[#1d9bf0]"
+                            className="h-5 text-[#6e767d] group-hover:text-[#1fc28c]"
                         />
                     </div>
                 </div>
                 {postPage && (
-                    <p className="text-[#d9d9d9] text-[15px] sm:text-base mt-0.5">
+                    <p className="text-gray-500 text-[15px] sm:text-base mt-0.5">
                         {post?.text}
                     </p>
                 )}
@@ -145,19 +151,19 @@ const Post = ({ id, post, postPage }) => {
                     <div
                         className="flex items-center space-x-1 group"
                         onClick={(e) => {
-                            e.stopPropagation()
+                            e.stopPropagation();
                             dispatch(setPostId(id));
                             dispatch(setIsModalOpen(true));
                         }}
                     >
-                        <div className="icon group-hover:bg-[#1d9bf0] group-hover:bg-opacity-10">
+                        <div className="icon group-hover:bg-[#1fc28c] group-hover:bg-opacity-10">
                             <FontAwesomeIcon
                                 icon={faCommentDots}
-                                className="h-5 group-hover:text-[#1d9bf0]"
+                                className="h-5 group-hover:text-[#1fc28c]"
                             />
                         </div>
                         {comments.length > 0 && (
-                            <span className="group-hover:text-[#1d9bf0] text-sm">
+                            <span className="group-hover:text-[#1fc28c] text-sm">
                                 {comments.length}
                             </span>
                         )}
@@ -219,13 +225,13 @@ const Post = ({ id, post, postPage }) => {
                     <div className="icon group">
                         <FontAwesomeIcon
                             icon={faShareNodes}
-                            className="h-5 group-hover:text-[#1d9bf0]"
+                            className="h-5 group-hover:text-[#1fc28c]"
                         />
                     </div>
                     <div className="icon group">
                         <FontAwesomeIcon
                             icon={faChartSimple}
-                            className="h-5 group-hover:text-[#1d9bf0]"
+                            className="h-5 group-hover:text-[#1fc28c]"
                         />
                     </div>
                 </div>

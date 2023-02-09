@@ -78,7 +78,7 @@ const Input = () => {
     };
     return (
         <div
-            className={`border-b border-gray-700 p-3 flex space-x-3 overflow-y-scroll ${
+            className={`border-b-8 border-white p-3 flex space-x-3 ${
                 isLoading && "opacity-60"
             }`}
         >
@@ -98,7 +98,7 @@ const Input = () => {
                         onChange={(e) => setInput(e.target.value)}
                         rows="2"
                         placeholder="What's happening?"
-                        className="bg-transparent outline-none text-[#d9d9d9] text-lg placeholder-gray-500 tracking-wide w-full min-h-[50px]"
+                        className="bg-transparent outline-none text-gray-500 text-lg placeholder-gray-500 tracking-wide w-full min-h-[50px]"
                     />
                     {selectedFile && (
                         <div className="relative">
@@ -128,7 +128,7 @@ const Input = () => {
                             >
                                 <FontAwesomeIcon
                                     icon={faImage}
-                                    className="h-[22px] text-[#1d9bf0]"
+                                    className="h-[22px] text-[#1fc28c]"
                                 />
                                 <input
                                     type="file"
@@ -140,7 +140,7 @@ const Input = () => {
                             <div className="icon rotate-90">
                                 <FontAwesomeIcon
                                     icon={faChartSimple}
-                                    className="h-[22px] text-[#1d9bf0]"
+                                    className="h-[22px] text-[#1fc28c]"
                                 />
                             </div>
                             <div
@@ -152,13 +152,13 @@ const Input = () => {
                             >
                                 <FontAwesomeIcon
                                     icon={faFaceSmile}
-                                    className="h-[22px] text-[#1d9bf0]"
+                                    className="h-[22px] text-[#1fc28c]"
                                 />
                             </div>
                             <div className="icon">
                                 <FontAwesomeIcon
                                     icon={faCalendar}
-                                    className="h-[22px] text-[#1d9bf0]"
+                                    className="h-[22px] text-[#1fc28c]"
                                 />
                             </div>
                             {showEmojis && (
@@ -175,11 +175,11 @@ const Input = () => {
                             )}
                         </div>
                         <button
-                            className="bg-[#1d9bf0] text-white rounded-full px-4 py-1.5 font-bold shadow-md hover:bg-[#1a8cd8] disabled:hover:bg-[#1d9bf0] disabled:opacity-50 disabled:cursor-default"
+                            className="bg-[#1fc28c] text-white rounded-full px-4 py-1.5 font-bold shadow-md hover:bg-[#05ad75] disabled:hover:bg-[#35c293] disabled:opacity-50 disabled:cursor-default"
                             disabled={!input.trim() && !selectedFile}
                             onClick={sendPost}
                         >
-                            Tweet
+                            Send
                         </button>
                     </div>
                 )}

@@ -18,9 +18,9 @@ const Comment = ({ id, comment }) => {
             />
             <div className="flex flex-col space-y-2 w-full">
                 <div className="flex justify-between">
-                    <div className="text-[#6e767d]">
+                    <div className="text-gray-500">
                         <div className="inline-block group">
-                            <h4 className="font-bold text-[#d9d9d9] text-[15px] sm:text-base linb group-hover:underline">
+                            <h4 className="font-bold text-gray-500 text-[15px] sm:text-base linb group-hover:underline">
                                 {comment?.username}
                             </h4>
                             <span className="ml-1.5 text-sm sm:text-[15px]">
@@ -33,14 +33,14 @@ const Comment = ({ id, comment }) => {
                                 {comment?.timestamp?.toDate()}
                             </Moment>
                         </span>
-                        <p className="text-[#d9d9d9] mt-0.5 max-w-lg overflow-y-scroll text-[15px] sm:text-base">
+                        <p className="text-gray-500 mt-0.5 max-w-lg text-[15px] sm:text-base">
                             {comment?.comment}
                         </p>
                     </div>
                     <div className="icon group flex-shrink-0 ml-auto">
                         <FontAwesomeIcon
                             icon={faEllipsis}
-                            className="h-5 text-[#6e767d] group-hover:text-[#1d9bf0]"
+                            className="h-5 text-[#6e767d] group-hover:text-[#1fc28c]"
                         />
                     </div>
                 </div>
@@ -48,7 +48,7 @@ const Comment = ({ id, comment }) => {
                     <div className="icon group">
                         <FontAwesomeIcon
                             icon={faCommentDots}
-                            className="h-5 group-hover:text-[#1d9bf0]"
+                            className="h-5 group-hover:text-[#1fc28c]"
                         />
                     </div>
                     <div className="icon group">
@@ -60,13 +60,13 @@ const Comment = ({ id, comment }) => {
                     <div className="icon group">
                         <FontAwesomeIcon
                             icon={faShareNodes}
-                            className="h-5 group-hover:text-[#1d9bf0]"
+                            className="h-5 group-hover:text-[#1fc28c]"
                         />
                     </div>
                     <div className="icon group">
                         <FontAwesomeIcon
                             icon={faChartSimple}
-                            className="h-5 group-hover:text-[#1d9bf0]"
+                            className="h-5 group-hover:text-[#1fc28c]"
                         />
                     </div>
                 </div>

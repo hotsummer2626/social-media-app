@@ -4,23 +4,25 @@ import { signIn } from "next-auth/react";
 
 const Login = ({ providers }) => {
     return (
-        <div className="flex flex-col items-center space-y-20 pt-48">
-            <Image
-                loader={imageLoader}
-                src="https://rb.gy/ogau5a"
-                width={150}
-                height={150}
-                style={{
-                    objectFit: "contain",
-                }}
-                alt="logo"
-                unoptimized
-            />
-            <div>
+        <div className="flex flex-col items-center space-y-20 pt-48 bg-green-100 w-full h-screen">
+            <div className="rounded-full overflow-hidden flex-shrink-0">
+                <Image
+                    loader={imageLoader}
+                    src="/images/logo.jpg"
+                    width={150}
+                    height={150}
+                    style={{
+                        objectFit: "contain",
+                    }}
+                    alt="logo"
+                    unoptimized
+                />
+            </div>
+            <div className="flex flex-col items-center space-y-2">
                 {Object.values(providers).map((provider) => (
                     <div key={provider.name}>
                         <button
-                            className="relative inline-flex items-center justify-start px-6 py-3 overflow-hidden font-medium transition-all bg-white rounded hover:bg-white group"
+                            className="relative inline-flex items-center justify-start px-6 py-3 overflow-hidden font-medium transition-all bg-white rounded hover:bg-white group drop-shadow-md"
                             onClick={() =>
                                 signIn(provider.id, { callbackUrl: "/" })
                             }
