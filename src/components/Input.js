@@ -18,7 +18,7 @@ import {
     updateDoc,
 } from "firebase/firestore";
 import { getDownloadURL, ref, uploadString } from "firebase/storage";
-import { useSession } from "next-auth/react";
+import { useSelector } from "react-redux";
 
 const Input = () => {
     const [input, setInput] = useState("");
@@ -26,17 +26,19 @@ const Input = () => {
     const [showEmojis, setShowEmojis] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const filePickerRef = useRef(null);
-    const { data: session } = useSession();
+    const {
+        auth: { currentUser },
+    } = useSelector((state) => state);
 
     const sendPost = async () => {
         if (isLoading) return;
         setIsLoading(true);
 
         const docRef = await addDoc(collection(db, "posts"), {
-            id: session.user.uid,
-            username: session.user.name,
-            userImg: session.user.image,
-            tag: session.user.tag,
+            uid: currentUser?.uid,
+            username: currentUser?.username,
+            userImg: currentUser?.userImg,
+            tag: currentUser?.tag,
             text: input,
             timestamp: serverTimestamp(),
         });
@@ -76,6 +78,7 @@ const Input = () => {
         let emoji = String.fromCodePoint(...codesArray);
         setInput(input + emoji);
     };
+    
     return (
         <div
             className={`border-b-8 border-white p-3 flex space-x-3 ${
@@ -83,7 +86,7 @@ const Input = () => {
             }`}
         >
             <img
-                src={session.user.image}
+                src={currentUser?.userImg}
                 alt="avatar"
                 className="h-11 w-11 rounded-full cursor-pointer"
             />

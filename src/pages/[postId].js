@@ -1,6 +1,3 @@
-import { getProviders, getSession, useSession } from "next-auth/react";
-import { useSelector, useDispatch } from "react-redux";
-import Modal from "@/components/Modal";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import {
@@ -11,44 +8,45 @@ import {
     query,
 } from "firebase/firestore";
 import { db } from "@/utils/firebase";
-import Login from "@/components/Login";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import Post from "@/components/Post";
 import Comment from "@/components/Comment";
 import Outline from "@/components/Outline";
 
-const PostPage = ({ providers }) => {
-    const { data: session } = useSession();
-    const {
-        modal: { isModalOpen },
-    } = useSelector((state) => state);
+const PostPage = () => {
     const router = useRouter();
     const { postId } = router.query;
     const [post, setPost] = useState(null);
     const [comments, setComments] = useState([]);
 
-    useEffect(
-        () =>
-            onSnapshot(doc(db, "posts", postId), (snapshot) =>
+    useEffect(() => {
+        let unsubscribe = () => {};
+        if (router.isReady) {
+            unsubscribe = onSnapshot(doc(db, "posts", postId), (snapshot) =>
                 setPost(snapshot.data())
-            ),
-        [db, postId]
-    );
+            );
+        }
+        return () => {
+            unsubscribe();
+        };
+    }, [db, postId]);
 
-    useEffect(
-        () =>
-            onSnapshot(
+    useEffect(() => {
+        let unsubscribe = () => {};
+        if (router.isReady) {
+            unsubscribe = onSnapshot(
                 query(
                     collection(db, "posts", postId, "comments"),
                     orderBy("timestamp", "desc")
                 ),
                 (snapshot) => setComments(snapshot.docs)
-            ),
-        [db, postId]
-    );
-
-    if (!session) return <Login providers={providers} />;
+            );
+        }
+        return () => {
+            unsubscribe();
+        };
+    }, [db, postId]);
 
     return (
         <Outline>
@@ -65,30 +63,20 @@ const PostPage = ({ providers }) => {
                     </div>
                     Social Media
                 </div>
-                <Post id={postId} post={post} postPage />
+                {postId && <Post id={postId} post={post} postPage />}
                 {comments.length > 0 && (
                     <div className="pb-72">
                         {comments.map((comment) => (
                             <Comment
                                 key={comment.id}
-                                id={comment.id}
                                 comment={comment.data()}
                             />
                         ))}
                     </div>
                 )}
             </div>
-            {isModalOpen && <Modal />}
         </Outline>
     );
 };
 
 export default PostPage;
-
-export async function getServerSideProps(context) {
-    const providers = await getProviders();
-    const session = await getSession(context);
-    return {
-        props: { providers, session },
-    };
-}

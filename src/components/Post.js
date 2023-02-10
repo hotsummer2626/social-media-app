@@ -10,7 +10,6 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { faHeart } from "@fortawesome/free-regular-svg-icons";
 import Moment from "react-moment";
-import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { db } from "@/utils/firebase";
 import {
@@ -18,31 +17,28 @@ import {
     deleteDoc,
     doc,
     onSnapshot,
-    orderBy,
-    query,
     setDoc,
     updateDoc,
 } from "firebase/firestore";
 import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setIsModalOpen } from "@/store/slices/modal";
 import { setPostId } from "@/store/slices/post";
 
 const Post = ({ id, post, postPage }) => {
-    const { data: session } = useSession();
     const [comments, setComments] = useState([]);
     const [likes, setLikes] = useState([]);
     const [liked, setLiked] = useState(false);
     const router = useRouter();
     const dispatch = useDispatch();
+    const {
+        auth: { currentUser },
+    } = useSelector((state) => state);
+
     useEffect(
         () =>
-            onSnapshot(
-                query(
-                    collection(db, "posts", id, "comments"),
-                    orderBy("timestamp", "desc")
-                ),
-                (snapshot) => setComments(snapshot.docs)
+            onSnapshot(collection(db, "posts", id, "comments"), (snapshot) =>
+                setComments(snapshot.docs)
             ),
         [db, id]
     );
@@ -57,19 +53,19 @@ const Post = ({ id, post, postPage }) => {
 
     useEffect(() => {
         setLiked(
-            likes.findIndex((like) => like.id === session?.user?.uid) !== -1
+            likes.findIndex((like) => like.id === currentUser?.uid) !== -1
         );
     }, [likes]);
 
     const likePost = async () => {
         if (liked) {
-            await deleteDoc(doc(db, "posts", id, "likes", session.user.uid));
+            await deleteDoc(doc(db, "posts", id, "likes", currentUser?.uid));
             await updateDoc(doc(db, "posts", id), {
                 numberOfLikes: likes.length - 1,
             });
         } else {
-            await setDoc(doc(db, "posts", id, "likes", session.user.uid), {
-                username: session.user.name,
+            await setDoc(doc(db, "posts", id, "likes", currentUser?.uid), {
+                username: currentUser?.username,
             });
             await updateDoc(doc(db, "posts", id), {
                 numberOfLikes: likes.length + 1,
@@ -169,7 +165,7 @@ const Post = ({ id, post, postPage }) => {
                         )}
                     </div>
                     <div className="flex items-center space-x-1 group">
-                        {session.user.uid === post?.id ? (
+                        {currentUser?.uid === post?.id ? (
                             <div
                                 className="icon group-hover:bg-red-600/10"
                                 onClick={(e) => {

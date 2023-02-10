@@ -1,8 +1,35 @@
 import Head from "next/head";
 import SideBar from "./SideBar";
 import Widget from "./Widget";
+import Modal from "./Modal";
+import { useDispatch, useSelector } from "react-redux";
+import { useState, useEffect } from "react";
+import { login, logout } from "@/store/slices/auth";
+import { useRouter } from "next/router";
 
 const Outline = ({ children }) => {
+    const [isAuthorized, setIsAuthorized] = useState(false);
+    const {
+        auth: { currentUser },
+        modal: { isModalOpen },
+    } = useSelector((state) => state);
+    const dispatch = useDispatch();
+    const router = useRouter();
+
+    useEffect(() => {
+        const authUser =
+            currentUser || JSON.parse(localStorage.getItem("currentUser"));
+        const expireTime = JSON.parse(localStorage.getItem("expireTime"));
+        if (authUser && expireTime && expireTime - Date.now() > 10000) {
+            dispatch(login({ authUser, expireTime }));
+            setIsAuthorized(true);
+        } else {
+            dispatch(logout());
+            setIsAuthorized(false);
+            router.push("/login");
+        }
+    }, [currentUser]);
+
     return (
         <>
             <Head>
@@ -17,11 +44,14 @@ const Outline = ({ children }) => {
                 />
                 <link rel="icon" href="/favicon.ico" />
             </Head>
-            <main className="bg-white min-h-screen flex max-w-[1500px] mx-auto">
-                <SideBar />
-                {children}
-                <Widget/>
-            </main>
+            {isAuthorized ? (
+                <main className="bg-white min-h-screen flex max-w-[1500px] mx-auto">
+                    <SideBar />
+                    {children}
+                    <Widget />
+                    {isModalOpen && <Modal />}
+                </main>
+            ) : null}
         </>
     );
 };

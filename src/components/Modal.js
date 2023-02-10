@@ -19,7 +19,6 @@ import {
 } from "firebase/firestore";
 import { db } from "@/utils/firebase";
 import Moment from "react-moment";
-import { useSession } from "next-auth/react";
 import data from "@emoji-mart/data";
 import Picker from "@emoji-mart/react";
 import { useRouter } from "next/router";
@@ -27,14 +26,13 @@ import { useRouter } from "next/router";
 const Modal = () => {
     const [post, setPost] = useState(null);
     const [comment, setComment] = useState("");
-    const [input, setInput] = useState("");
     const [showEmojis, setShowEmojis] = useState(false);
     const {
+        auth: { currentUser },
         modal: { isModalOpen },
         post: { postId },
     } = useSelector((state) => state);
     const dispatch = useDispatch();
-    const { data: session } = useSession();
     const router = useRouter();
 
     useEffect(
@@ -50,9 +48,9 @@ const Modal = () => {
 
         await addDoc(collection(db, "posts", postId, "comments"), {
             comment,
-            username: session.user.name,
-            tag: session.user.tag,
-            userImg: session.user.image,
+            username: currentUser.username,
+            tag: currentUser.tag,
+            userImg: currentUser.userImg,
             timestamp: serverTimestamp(),
         });
 
@@ -100,8 +98,8 @@ const Modal = () => {
                             leaveFrom="opacity-100 scale-100"
                             leaveTo="opacity-0 scale-95"
                         >
-                            <Dialog.Panel className="w-full max-w-xl transform rounded-2xl bg-black text-left align-middle shadow-xl transition-all">
-                                <div className="flex items-center px-1.5 py-2 border-b border-gray-700">
+                            <Dialog.Panel className="w-full max-w-xl transform rounded-2xl bg-green-100 text-left align-middle shadow-xl transition-all">
+                                <div className="flex items-center px-1.5 py-2 border-b border-gray-500">
                                     <div
                                         className="hoverAnimation w-9 h-9 flex items-center justify-center xl:px-0"
                                         onClick={() =>
@@ -110,14 +108,14 @@ const Modal = () => {
                                     >
                                         <FontAwesomeIcon
                                             icon={faXmark}
-                                            className="h-[22px] text-white"
+                                            className="h-[22px] text-gray-500"
                                         />
                                     </div>
                                 </div>
                                 <div className="flex px-4 pt-5 pb-2.5 sm:px-6">
                                     <div className="w-full">
-                                        <div className="text-[#6e767d] flex gap-x-3 relative">
-                                            <span className="w-0.5 h-full z-[-1] absolute left-5 top-11 bg-gray-600" />
+                                        <div className="text-gray-500 flex gap-x-3 relative">
+                                            <span className="w-0.5 h-full z-[-1] absolute left-5 top-11 bg-gray-500" />
                                             <img
                                                 src={post?.userImg}
                                                 alt="avatar"
@@ -125,7 +123,7 @@ const Modal = () => {
                                             />
                                             <div>
                                                 <div className="inline-block group">
-                                                    <h4 className="font-bold text-[15px] sm:text-base text-[#d9d9d9] inline-block">
+                                                    <h4 className="font-bold text-[15px] sm:text-base text-gray-500 inline-block">
                                                         {post?.username}
                                                     </h4>
                                                     <span className="ml-1.5 text-sm sm:text-[15px]">
@@ -138,18 +136,18 @@ const Modal = () => {
                                                         {post?.timestamp?.toDate()}
                                                     </Moment>
                                                 </span>
-                                                <p className="text-[#d9d9d9] text-[15px] sm:text-base">
+                                                <p className="text-gray-500 text-[15px] sm:text-base">
                                                     {post?.text}
                                                 </p>
                                             </div>
                                         </div>
                                         <div className="mt-7 flex space-x-3 w-full">
                                             <img
-                                                src={session.user.image}
+                                                src={currentUser?.userImg}
                                                 alt="avatar"
                                                 className="h-11 w-11 rounded-full"
                                             />
-                                            <div className="flex-grow mt-2">
+                                            <div className="flex-grow mt-2 divide-y divide-gray-700">
                                                 <textarea
                                                     value={comment}
                                                     onChange={(e) =>
@@ -157,16 +155,16 @@ const Modal = () => {
                                                             e.target.value
                                                         )
                                                     }
-                                                    placeholder="Tweet your reply"
+                                                    placeholder="Type your reply"
                                                     rows="2"
-                                                    className="bg-transparent outline-none text-[#d9d9d9] text-lg placeholder-gray-500 tracking-wide w-full min-h-[80px]"
+                                                    className="bg-transparent outline-none text-gray-500 text-lg placeholder-gray-500 tracking-wide w-full min-h-[80px]"
                                                 />
                                                 <div className="flex items-center justify-between pt-2.5">
                                                     <div className="flex items-center">
                                                         <div className="icon">
                                                             <FontAwesomeIcon
                                                                 icon={faImage}
-                                                                className="h-[22px] text-[#1d9bf0]"
+                                                                className="h-[22px] text-[#1fc28c]"
                                                             />
                                                             <input
                                                                 type="file"
@@ -178,7 +176,7 @@ const Modal = () => {
                                                                 icon={
                                                                     faChartSimple
                                                                 }
-                                                                className="h-[22px] text-[#1d9bf0]"
+                                                                className="h-[22px] text-[#1fc28c]"
                                                             />
                                                         </div>
                                                         <div
@@ -194,7 +192,7 @@ const Modal = () => {
                                                                 icon={
                                                                     faFaceSmile
                                                                 }
-                                                                className="h-[22px] text-[#1d9bf0]"
+                                                                className="h-[22px] text-[#1fc28c]"
                                                             />
                                                         </div>
                                                         <div className="icon">
@@ -202,7 +200,7 @@ const Modal = () => {
                                                                 icon={
                                                                     faCalendar
                                                                 }
-                                                                className="h-[22px] text-[#1d9bf0]"
+                                                                className="h-[22px] text-[#1fc28c]"
                                                             />
                                                         </div>
                                                         {showEmojis && (
@@ -223,7 +221,7 @@ const Modal = () => {
                                                         )}
                                                     </div>
                                                     <button
-                                                        className="bg-[#1d9bf0] text-white rounded-full px-4 py-1.5 font-bold shadow-md hover:bg-[#1a8cd8] disabled:hover:bg-[#1d9bf0] disabled:opacity-50 disabled:cursor-default"
+                                                        className="bg-[#1fc28c] text-white rounded-full px-4 py-1.5 font-bold shadow-md hover:bg-[#05ad75] disabled:hover:bg-[#35c293] disabled:opacity-50 disabled:cursor-default"
                                                         disabled={
                                                             !comment.trim()
                                                         }

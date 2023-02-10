@@ -27,14 +27,14 @@ const Widget = () => {
     );
 
     return (
-        <div className="hidden xl:block p-[8px] h-screen">
+        <div className="hidden lg:block  xl:block p-[8px] h-screen">
             <div className="bg-green-100 w-[350px] h-[700px] flex flex-col">
                 <div className="p-2 text-lg font-bold text-gray-500">
                     Popular posts
                 </div>
                 {posts.length > 0 &&
                     posts.map((post) => (
-                        <div key={post.id} className="p-2 w-full">
+                        <div key={post.postId} className="p-2 w-full">
                             <div className="w-full bg-white drop-shadow-sm p-3 rounded-lg">
                                 <div className="flex">
                                     <img

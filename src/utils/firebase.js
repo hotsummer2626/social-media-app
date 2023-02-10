@@ -1,9 +1,10 @@
 import { initializeApp, getApp, getApps } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
+import { getAuth } from "firebase/auth";
 
 const firebaseConfig = {
-    apiKey: process.env.FIREBASE_API_KEY,
+    apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
     authDomain: "social-media-app-33957.firebaseapp.com",
     projectId: "social-media-app-33957",
     storageBucket: "social-media-app-33957.appspot.com",
@@ -15,6 +16,7 @@ const firebaseConfig = {
 const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
 const db = getFirestore();
 const storage = getStorage();
+const auth = getAuth(app);
 
 export default app;
-export { db, storage };
+export { db, storage, auth };
