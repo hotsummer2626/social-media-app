@@ -50,31 +50,26 @@ const PostPage = () => {
 
     return (
         <Outline>
-            <div className="flex-grow max-w-2xl sm:ml-[73px] xl:ml-[370px] bg-green-100">
-                <div className="flex items-center px-1.5 py-2 border-b-8 border-white text-gray-500 font-semibold text-xl gap-x-4 sticky top-0 z-50 bg-green-100">
-                    <div
-                        className="hoverAnimation w-9 h-9 flex items-center justify-center xl:px-0"
-                        onClick={() => router.push("/")}
-                    >
-                        <FontAwesomeIcon
-                            icon={faArrowLeft}
-                            className="h-5 text-gray-500"
-                        />
-                    </div>
-                    Social Media
+            <div className="flex items-center px-1.5 py-2 border-b-8 border-white text-gray-500 font-semibold text-xl gap-x-4 sticky top-0 z-50 bg-green-100">
+                <div
+                    className="hoverAnimation w-9 h-9 flex items-center justify-center xl:px-0"
+                    onClick={() => router.push("/")}
+                >
+                    <FontAwesomeIcon
+                        icon={faArrowLeft}
+                        className="h-5 text-gray-500"
+                    />
                 </div>
-                {postId && <Post id={postId} post={post} postPage />}
-                {comments.length > 0 && (
-                    <div className="pb-72">
-                        {comments.map((comment) => (
-                            <Comment
-                                key={comment.id}
-                                comment={comment.data()}
-                            />
-                        ))}
-                    </div>
-                )}
+                Social Media
             </div>
+            {postId && <Post id={postId} post={post} postPage />}
+            {comments.length > 0 && (
+                <div className="pb-72">
+                    {comments.map((comment) => (
+                        <Comment key={comment.id} comment={comment.data()} />
+                    ))}
+                </div>
+            )}
         </Outline>
     );
 };

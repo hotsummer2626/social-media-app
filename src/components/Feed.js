@@ -23,7 +23,7 @@ const Feed = () => {
     );
 
     return (
-        <div className="text-white flex-grow max-w-2xl sm:ml-[75px] xl:ml-[348px] bg-green-100">
+        <>
             <div className="text-gray-500 flex items-center sm:justify-between py-2 px-3 sticky top-0 z-50 border-b-8 border-white bg-green-100">
                 <h2 className="text-lg sm:text-xl font-bold">
                     Hello, {currentUser?.username} !!!
@@ -41,7 +41,7 @@ const Feed = () => {
                     <Post key={post.id} id={post.id} post={post.data()} />
                 ))}
             </div>
-        </div>
+        </>
     );
 };
 

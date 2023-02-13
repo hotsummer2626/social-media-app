@@ -47,7 +47,9 @@ const Outline = ({ children }) => {
             {isAuthorized ? (
                 <main className="bg-white min-h-screen flex max-w-[1500px] mx-auto">
                     <SideBar />
-                    {children}
+                    <div className="text-white flex-grow max-w-2xl sm:ml-[75px] xl:ml-[348px] bg-green-100">
+                        {children}
+                    </div>
                     <Widget />
                     {isModalOpen && <Modal />}
                 </main>
